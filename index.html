@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Javier Sanagustín Moreu · Pintor</title><meta name="description" content="Javier Sanagustín Moreu, pintor de Huesca. Obra, exposición Reflejos y sombras (Palacio de Villahermosa, 2026) y contacto."><script>(function(){try{var s=localStorage.getItem('lang'),n=String(navigator.language||'es').toLowerCase();if(s==='en'){var p=location.pathname.split('/').pop()||'index.html';if(!/\.html$/.test(p))p='index.html';var u=new URL('en/'+p,location.href).href;fetch(u,{method:'HEAD'}).then(function(r){if(r.ok)location.replace(u+location.hash);}).catch(function(){});}}catch(e){}})();</script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preload" href="fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="fonts/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="fonts.css">
+<style>
+/* Cada obra a sangre, recortada con punto de interés propio. Nombre y menú encima, que cambian de blanco a tinta según la imagen.
+   El color de la obra vive en la etiqueta inferior, donde una margarita marca el tiempo que queda. */
+:root{
+  --canvas:#e6e6e3;
+  --ink:#141412;
+  --veil:rgba(247,247,245,.62);
+  --fgnow:#ffffff;
+  --shade:0 1px 14px rgba(0,0,0,.38);
+  --label:#716832;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --pad:clamp(16px,3vw,40px);
+  --gutter-l:max(var(--pad),env(safe-area-inset-left,0px));
+  --gutter-r:max(var(--pad),env(safe-area-inset-right,0px));
+  color-scheme:light;
+}
+html{scroll-snap-type:none}html.snap{scroll-snap-type:y proximity}
+body{margin:0;min-height:100%;background:#f4f0ec;color:var(--ink);font:400 1rem/1.4 var(--body)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid #fff;outline-offset:3px;box-shadow:0 0 0 4px var(--ink)}
+
+/* Entrada: la frase se escribe y al final brota la flor. Vídeo sobre blanco puro, fundido con el lienzo por multiplicación. */
+.intro{scroll-snap-align:start;position:relative;padding:72px var(--gutter-r) 14px var(--gutter-l);background:#f4f0ec url("img/papel.jpg") center/cover no-repeat}
+/* la flor es una capa propia: nace al final de la frase y se queda por encima de las obras */
+.flower{position:fixed;left:0;top:0;z-index:6;pointer-events:none;filter:drop-shadow(0 0 3px var(--fhalo,transparent)) drop-shadow(0 0 12px var(--fhalo,transparent))}
+.intro video,.intro .still{display:block;width:100%;height:auto;mix-blend-mode:multiply;filter:url(#tint)}
+.intro .still{display:none}
+.ph{position:relative}.ph canvas{display:none;position:absolute;left:0;top:0;width:100%;height:100%;mix-blend-mode:multiply;pointer-events:none}
+.intro.cv canvas{display:block}.intro.cv video,.intro.cv .still{opacity:0;filter:none;mix-blend-mode:normal}
+.intro.static video{display:none}.intro.static .still{display:block}
+.carousel{position:relative;height:100vh;height:100dvh;overflow:hidden;scroll-snap-align:start}
+html.onintro{--fgnow:#141412;--namecol:#141412;--shade:none}
+.stage{position:absolute;inset:0}
+.slide{position:absolute;inset:0;margin:0;opacity:0;transition:opacity 1s ease;pointer-events:none}
+.slide.on{opacity:1}
+.slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%)}
+
+.veil{position:absolute;inset:0;background:var(--veil);opacity:0;transition:opacity .35s ease;pointer-events:none;z-index:3}
+html.veiled .veil{opacity:1}
+
+header{position:fixed;inset:0 0 auto 0;z-index:5;display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;
+  padding:calc(var(--pad) * .7 + env(safe-area-inset-top,0px)) var(--gutter-r) 1.2rem var(--gutter-l);
+  color:var(--fgnow);text-shadow:var(--shade);transition:color .6s ease}
+.name{margin:0;font:800 clamp(1.7rem,3.6vw,3.4rem)/.92 var(--display);letter-spacing:-.025em;max-width:9em;color:var(--namecol,inherit);text-shadow:var(--nshade,var(--shade));transition:color .8s ease}
+nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.35rem 1.6rem;max-width:58rem}
+nav a{display:block;padding:.35rem 0;color:inherit;text-decoration:none;font-weight:500;font-size:.98rem;letter-spacing:.02em;border-bottom:1px solid transparent}
+nav a:hover,nav a:focus-visible{border-bottom-color:currentColor}
+.menu-btn{display:none;background:none;border:1px solid currentColor;padding:.45rem .9rem;cursor:pointer;font-weight:500;letter-spacing:.04em;text-shadow:inherit}
+
+.arrow{position:absolute;top:50%;translate:0 -50%;z-index:4;width:48px;height:48px;border:0;border-radius:50%;
+  background:rgba(247,247,245,.72);color:var(--ink);cursor:pointer;display:grid;place-items:center;opacity:.55;transition:opacity .25s,background .25s}
+.arrow:hover,.arrow:focus-visible{opacity:1;background:rgba(247,247,245,.96)}
+.arrow svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.prev{left:max(10px,env(safe-area-inset-left,0px))}
+.next{right:max(10px,env(safe-area-inset-right,0px))}
+
+footer{position:absolute;inset:auto 0 0 0;z-index:4;display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:flex-end;gap:1rem;
+  padding:0 var(--gutter-r) calc(var(--pad) * .7 + env(safe-area-inset-bottom,0px)) var(--gutter-l);pointer-events:none}
+.label{display:flex;align-items:center;gap:.8rem;min-width:0;background:rgba(247,247,245,.94);color:var(--ink);padding:.55rem 1rem .55rem .7rem}
+.label b{font-weight:600}
+.label span{opacity:.72}
+.label .txt{min-width:0;font-size:.95rem;line-height:1.3}
+.label{max-width:min(34rem,calc(100vw - 9.5rem))}
+.label .t span{opacity:.72}
+.label .q{margin-top:.15rem;font-style:italic}
+.count{font-variant-numeric:tabular-nums;font-size:.9rem;letter-spacing:.06em;color:#fff;background:rgba(20,20,18,.66);padding:.4rem .7rem;white-space:nowrap}
+
+/* margarita-reloj: un pétalo por cada trozo de tiempo; se reinicia con cada obra */
+.daisy{width:38px;height:38px;flex:none;overflow:visible}
+.daisy .p{fill:var(--petal);transition:fill .8s ease;opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+.daisy .c{fill:#f2c94c}
+.daisy.run .p{animation:petal .45s ease-out forwards;animation-delay:calc(var(--k) * var(--step,540ms))}
+.daisy.static .p{opacity:1}
+@keyframes petal{from{opacity:0;transform:rotate(var(--r)) scale(.15)}to{opacity:1;transform:rotate(var(--r)) scale(1)}}
+html.paused .daisy.run .p{animation-play-state:paused}
+.daisy .c{stroke:rgba(20,20,18,.25);stroke-width:.6}
+
+@media (max-width:760px){
+  .intro{padding:56px 10px 10px}
+  .menu-btn{display:inline-block}
+  nav ul{position:fixed;inset:0;z-index:7;background:var(--veil);backdrop-filter:blur(2px);flex-direction:column;justify-content:center;align-items:flex-start;gap:.6rem;padding:0 var(--gutter-l);max-width:none;display:none;color:var(--ink);text-shadow:none}
+  nav ul a{font:700 2rem/1.15 var(--display);letter-spacing:-.01em}
+  html.menu-open nav ul{display:flex}
+  html.menu-open .menu-btn{position:relative;z-index:8}
+  .arrow{width:42px;height:42px}
+}
+@media (prefers-reduced-motion:reduce){.slide{transition:none}header,.label{transition:none}}
+#menuList li.lang a{font-size:.85rem;letter-spacing:.1em;opacity:.7}
+</style>
+
+<header id="top">
+  <h1 class="name">Javier Sanagustín Moreu</h1>
+  <nav aria-label="Principal">
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menuList">Menú</button>
+    <ul id="menuList">
+      <li><a href="obra.html">Obra</a></li>
+      <li><a href="reflejos.html">Reflejos y sombras</a></li>
+      <li><a href="disponible.html">En venta</a></li><li><a href="itinerancia.html">Itinerancia</a></li>
+      <li><a href="prensa.html">Prensa</a></li>
+      <li><a href="trayectoria.html">Trayectoria</a></li>
+      <li><a href="contacto.html">Contacto</a></li><li class="lang"><a href="en/index.html" data-lang="en" lang="en" hreflang="en">EN</a></li></ul></nav>
+</header>
+
+<canvas class="flower" id="flower" aria-hidden="true"></canvas>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="tint" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%"><feColorMatrix id="tintM" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/></filter></svg>
+<section class="intro" id="intro" aria-label="Entrada">
+  <div class="ph" id="ph"><video id="introVid" muted playsinline preload="auto" aria-label="Se escribe a mano: El arte es la luna que se deja ver durante el día, y al final brota una flor"></video>
+  <img class="still" id="introStill" alt="El arte es la luna que se deja ver durante el día, escrito a mano, con una flor al final"><canvas id="phraseC" aria-hidden="true"></canvas></div>
+</section>
+<section class="carousel" id="obra">
+<div class="stage" id="stage"></div>
+<div class="veil" aria-hidden="true"></div>
+
+<button class="arrow prev" id="prev" type="button" aria-label="Obra anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button class="arrow next" id="next" type="button" aria-label="Obra siguiente"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+
+<footer>
+  <div class="label" id="label">
+    <svg class="daisy" id="daisy" viewBox="-20 -20 40 40" aria-hidden="true"></svg>
+    <div class="txt" id="cap"></div>
+  </div>
+  <div class="count" id="count"></div>
+</footer>
+</section>
+
+<script>
+(function(){
+  var WORKS=[{"src": "img/antes-de-ver.jpg", "title": "Antes de ver", "meta": "2025 · Óleo sobre lienzo", "alt": "Iris blanco de gran tamaño, pintado al óleo, con verdes y un toque amarillo", "pos": "50% 48%", "td": "d", "tm": "l", "label": "#716832", "nd": "#ffc61a", "nm": "#ffc61a", "petal": "#867b3c", "year": "2025", "tech": "Óleo sobre lienzo", "q": "Hay un instante, antes de nombrar lo que se ve, en que la mirada todavía no ha decidido.", "fd": "#141412", "fdt": "d", "fm": "#141412", "fmt": "d", "ns": 1}, {"src": "img/ardiente-calma.jpg", "title": "Ardiente calma", "meta": "2024 · Óleo sobre lienzo", "alt": "Mujer dormida con vestido naranja y velo azul, junto al mar", "pos": "50% 55%", "td": "l", "tm": "d", "label": "#8f592e", "nd": "#ff7a00", "nm": "#ff7a00", "petal": "#a96937", "year": "2024", "tech": "Óleo sobre lienzo", "q": "Alguien en quien el sol quisiera quedarse.", "fd": "#f3e4d8", "fdt": "l", "fm": "#f3e4d8", "fmt": "l", "ns": 1}, {"src": "img/cerro-encendido.jpg", "title": "Cerro encendido", "meta": "2025 · Óleo sobre lienzo", "alt": "Bosque de troncos azules con ramas naranjas", "pos": "50% 50%", "td": "l", "tm": "d", "label": "#2f548a", "nd": "#ff7a1a", "nm": "#ee3a00", "petal": "#2f548a", "year": "2025", "tech": "Óleo sobre lienzo", "q": "Juntos no descansan.", "fd": "#d9e3f2", "fdt": "l", "fm": "#d9e3f2", "fmt": "l"}, {"src": "img/sin-distancia.jpg", "title": "Sin distancia", "meta": "2023 · Óleo sobre lienzo", "alt": "Cinco figuras femeninas desnudas en un espacio fragmentado de rojos y azules", "pos": "50% 40%", "td": "l", "tm": "d", "label": "#9b4545", "nd": "#2a8cff", "nm": "#e0261f", "petal": "#9b4545", "year": "2023", "tech": "Óleo sobre lienzo", "q": "Son cuerpos atravesados por la pintura.", "fd": "#441818", "fdt": "d", "fm": "#441818", "fmt": "d"}, {"src": "img/hacia-arriba-bleed.jpg", "title": "Hacia arriba", "meta": "2022 · Óleo sobre tabla, redonda", "alt": "Ramas de árbol contra un cielo turquesa", "pos": "50% 50%", "td": "l", "tm": "l", "label": "#136f81", "nd": "#fff7b0", "nm": "#fff7b0", "petal": "#17859b", "year": "2022", "tech": "Óleo sobre tabla, redonda", "q": "Y solo el viento se atreve a juntarlos.", "fd": "#141412", "fdt": "d", "fm": "#141412", "fmt": "d", "ns": 1}, {"src": "img/pupila-azul.jpg", "title": "Pupila azul", "meta": "2025 · Óleo sobre lienzo", "alt": "Figura sentada y encogida en azul ultramar sobre fondo claro", "pos": "50% 55%", "td": "d", "tm": "d", "label": "#1e378a", "nd": "#1435a3", "nm": "#1841c7", "petal": "#1e378a", "year": "2025", "tech": "Óleo sobre lienzo", "q": "Desde dentro del repliegue, la mano sujeta firme.", "fd": "#0c1c50", "fdt": "d", "fm": "#141412", "fmt": "d"}, {"src": "img/llanura-interior.jpg", "title": "Llanura interior", "meta": "2025 · Óleo sobre lienzo", "alt": "Llanura amarilla con un árbol, vista desde lo alto", "pos": "50% 50%", "td": "d", "tm": "d", "label": "#796536", "nd": "#6c500d", "nm": "#7f5e0f", "petal": "#8e7740", "year": "2025", "tech": "Óleo sobre lienzo", "q": "Mares de ocre quebrados por islotes verdes.", "fd": "#443718", "fdt": "d", "fm": "#141412", "fmt": "d"}, {"src": "img/mirada-encarnada.jpg", "title": "Mirada encarnada", "meta": "2026 · Óleo sobre lienzo", "alt": "Retrato de mujer con trenzas sentada ante un paisaje de fondo", "pos": "50% 32%", "td": "l", "tm": "l", "label": "#593428", "nd": "#ff4d6d", "nm": "#ff4d6d", "petal": "#593528", "year": "2026", "tech": "Óleo sobre lienzo", "q": "Aquí esa mirada se sostiene envuelta en un sueño en el que se ha disuelto.", "fd": "#ffffff", "fdt": "l", "fm": "#efe1dc", "fmt": "l"}, {"src": "img/luz-retenida.jpg", "title": "Luz retenida", "meta": "2025 · Óleo sobre lienzo", "alt": "Tulipanes rojos entre hierbas altas", "pos": "50% 40%", "td": "l", "tm": "l", "label": "#602b2c", "nd": "#ff2e55", "nm": "#ff2e55", "petal": "#602b2c", "year": "2025", "tech": "Óleo sobre lienzo", "q": "La realidad que interesaba no era botánica. Era pictórica.", "fd": "#efdcdc", "fdt": "l", "fm": "#efdcdc", "fmt": "l"}, {"src": "img/no-caigas.jpg", "title": "No caigas", "meta": "2026 · Óleo sobre lienzo", "alt": "Jinete con lanza sobre un dragón en un río, con atardecer naranja", "pos": "50% 45%", "td": "l", "tm": "l", "label": "#2f4969", "nd": "#a4c7f3", "nm": "#5296e9", "petal": "#2f4969", "year": "2026", "tech": "Óleo sobre lienzo", "q": "Aquí convierto la batalla en danza.", "fd": "#dce4ef", "fdt": "l", "fm": "#dce4ef", "fmt": "l"}, {"src": "img/antes-de-reconocer.jpg", "title": "Antes de reconocer", "meta": "2026 · Óleo sobre lienzo", "alt": "Figura azul transparente sobre un paisaje de campos y grietas", "pos": "50% 40%", "td": "d", "tm": "l", "label": "#855f3b", "nd": "#1f43ff", "nm": "#1f43ff", "petal": "#906740", "year": "2026", "tech": "Óleo sobre lienzo", "q": "Me ves como yo me pinto. Con tus ojos, no los míos.", "fd": "#efe5dc", "fdt": "l", "fm": "#efe5dc", "fmt": "l"}, {"src": "img/en-el-umbral.jpg", "title": "En el umbral", "meta": "2023 · Óleo sobre lienzo", "alt": "Retrato de mujer rubia con un pañuelo azul en la cabeza", "pos": "50% 30%", "td": "l", "tm": "l", "label": "#593728", "nd": "#ee5a96", "nm": "#ee5a96", "petal": "#593828", "year": "2023", "tech": "Óleo sobre lienzo", "q": "Hay retratos que esperan y retratos que miran.", "fd": "#efe2dc", "fdt": "l", "fm": "#efe2dc", "fmt": "l"}, {"src": "img/entre-fragmentos.jpg", "title": "Entre fragmentos", "meta": "2026 · Óleo sobre lienzo, políptico", "alt": "Sauce de ramas naranjas y verdes en un políptico de seis paneles", "pos": "50% 50%", "td": "l", "tm": "l", "label": "#636c30", "nd": "#b5d019", "nm": "#c5e21c", "petal": "#636c30", "year": "2026", "tech": "Óleo sobre lienzo, políptico", "q": "Una arquitectura viva que crece hasta dejarse caer.", "fd": "#141412", "fdt": "d", "fm": "#ecefdc", "fmt": "l"}, {"src": "img/antes-de-encontrar.jpg", "title": "Antes de encontrar", "meta": "2021 · Técnica mixta sobre lienzo", "alt": "Abstracción horizontal en azul, blanco y negro con salpicaduras", "pos": "50% 50%", "td": "d", "tm": "d", "label": "#282959", "nd": "#ff4a14", "nm": "#ff4a14", "petal": "#282a59", "year": "2021", "tech": "Técnica mixta sobre lienzo", "q": "La mancha decidió sola.", "fd": "#181944", "fdt": "d", "fm": "#181944", "fmt": "d"}];
+  var root=document.documentElement, stage=document.getElementById('stage');
+  var cap=document.getElementById('cap'), count=document.getElementById('count'), daisy=document.getElementById('daisy');
+  var header=document.getElementById('top'), menuBtn=document.getElementById('menuBtn'), menuList=document.getElementById('menuList');
+  var DUR=7000, PETALS=12, i=0, timer=null;
+  var intro=document.getElementById('intro'), carousel=document.getElementById('obra');
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mobile=window.matchMedia('(max-width: 760px)');
+
+  // diapositivas
+  var slides=WORKS.map(function(w,k){
+    var f=document.createElement('figure');f.className='slide';
+    var im=document.createElement('img');im.alt=w.alt;im.style.setProperty('--pos',w.pos);im.decoding='async';
+    if(k===0){im.src=w.src;im.fetchPriority='high';}else{im.dataset.src=w.src;}
+    f.appendChild(im);stage.appendChild(f);return f;
+  });
+
+  // margarita: 12 pétalos y centro
+  var svg='';
+  for(var k=0;k<PETALS;k++){var r=k*(360/PETALS);
+    svg+='<ellipse class="p" style="--k:'+(k+1)+';--r:'+r+'deg" cx="0" cy="-10.5" rx="3.5" ry="8" transform="rotate('+r+')"/>';}
+  svg+='<circle class="c" r="4.4"/>';
+  daisy.innerHTML=svg;
+
+  function load(n){var im=slides[(n+slides.length)%slides.length].querySelector('img');
+    if(im&&im.dataset.src){im.src=im.dataset.src;delete im.dataset.src;}}
+  function pad(n){return (n<10?'0':'')+n;}
+  function toneOf(w){return (mobile.matches?w.tm:w.td)==='d';}
+  function applyFg(){
+    var dark=root.classList.contains('veiled')||root.classList.contains('menu-open')||toneOf(WORKS[i]);
+    if(root.classList.contains('onintro')){setFlowerColor();return;}
+    root.style.setProperty('--fgnow',dark?'#141412':'#ffffff');
+    var w=WORKS[i], veiled=root.classList.contains('veiled')||root.classList.contains('menu-open');
+    root.style.setProperty('--namecol',veiled?w.label:(mobile.matches?w.nm:w.nd));
+    if(w.ns&&!veiled)root.style.setProperty('--nshade','0 0 2px rgba(0,0,0,.5),0 0 14px rgba(0,0,0,.45)');else root.style.removeProperty('--nshade');
+    root.style.setProperty('--petal',w.petal);
+    root.style.setProperty('--shade',dark?'0 0 3px rgba(255,255,255,.55),0 0 16px rgba(255,255,255,.55)':'0 0 3px rgba(0,0,0,.5),0 0 16px rgba(0,0,0,.5)');
+    var ft=mobile.matches?w.fmt:w.fdt;
+    root.style.setProperty('--fhalo',(veiled||ft==='d')?'rgba(255,255,255,.5)':'rgba(0,0,0,.4)');
+    setFlowerColor();
+  }
+  function show(n){
+    i=(n+slides.length)%slides.length;var w=WORKS[i];
+    slides.forEach(function(s,k){s.classList.toggle('on',k===i);});
+    root.style.setProperty('--label',w.label);
+    cap.innerHTML='<div class="t"><b></b> <span></span></div><div class="q"></div>';
+    cap.querySelector('b').textContent=w.title;cap.querySelector('.t span').textContent=w.year;
+    cap.querySelector('.q').textContent=w.q||w.tech;
+    count.textContent=pad(i+1)+' / '+pad(slides.length);
+    load(i);load(i+1);applyFg();restart();placeFlower();
+  }
+  function restart(){
+    clearTimeout(timer);
+    daisy.classList.remove('run','static');void daisy.getBoundingClientRect();
+    if(reduce){daisy.classList.add('static');return;}
+    daisy.style.setProperty('--step',(DUR-700)/PETALS+'ms');
+    daisy.classList.add('run');
+    if(!paused())timer=setTimeout(function(){show(i+1);},DUR);
+  }
+  function paused(){return root.classList.contains('paused')||document.hidden;}
+  function setPaused(p){root.classList.toggle('paused',p);if(p){clearTimeout(timer);}else{restart();}}
+
+  document.getElementById('next').addEventListener('click',function(){show(i+1);});
+  document.getElementById('prev').addEventListener('click',function(){show(i-1);});
+  document.addEventListener('keydown',function(e){
+    if(root.classList.contains('onintro')){return;}
+    if(e.key==='ArrowRight')show(i+1);else if(e.key==='ArrowLeft')show(i-1);else if(e.key==='Escape')closeMenu();
+  });
+  document.addEventListener('visibilitychange',function(){if(document.hidden){clearTimeout(timer);}else{restart();}});
+  mobile.addEventListener&&mobile.addEventListener('change',applyFg);
+
+  var x0=null;
+  document.addEventListener('pointerdown',function(e){if(e.pointerType==='touch')x0=e.clientX;});
+  document.addEventListener('pointerup',function(e){if(x0===null)return;var dx=e.clientX-x0;x0=null;if(Math.abs(dx)>50)show(i+(dx<0?1:-1));});
+
+  function veil(on){root.classList.toggle('veiled',on);applyFg();setPaused(on);}
+  header.addEventListener('mouseenter',function(){veil(true);});
+  header.addEventListener('mouseleave',function(){if(!root.classList.contains('menu-open')&&!header.contains(document.activeElement))veil(false);});
+  header.addEventListener('focusin',function(){veil(true);});
+  header.addEventListener('focusout',function(){setTimeout(function(){if(!header.contains(document.activeElement)&&!header.matches(':hover')&&!root.classList.contains('menu-open'))veil(false);},0);});
+
+  function closeMenu(){root.classList.remove('menu-open');menuBtn.setAttribute('aria-expanded','false');veil(false);}
+  menuBtn.addEventListener('click',function(){
+    var open=!root.classList.contains('menu-open');
+    root.classList.toggle('menu-open',open);menuBtn.setAttribute('aria-expanded',open?'true':'false');veil(open);
+  });
+  [].forEach.call(menuList.querySelectorAll('a'),function(a){a.addEventListener('click',function(e){if(a.getAttribute('href').charAt(0)==='#')e.preventDefault();});});
+
+  // flor: capa propia con transparencia. Crece a la vez que el vídeo y luego acompaña a las obras, teñida con el color de cada una.
+  var FL={"vw": 3744, "vh": 927, "fx": 0.9189369658119658, "fy": 0.0048543689320388345, "fw": 0.08012820512820513, "fh": 0.8980582524271845, "sw": 187, "sh": 520, "n": 35, "t0": 6700, "dt": 66, "col": "#5c1eff"}, VIOLET=FL.col;
+  var fc=document.getElementById('flower'), fctx=fc.getContext('2d'), sprite=new Image(), spriteOk=false, curK=-1;
+  var frgb=hex2rgb(WORKS[0].label), prgb=frgb.slice(), ftween=null, onPaper=true, tintM=document.getElementById('tintM');
+  function hex2rgb(h){h=h.replace('#','');return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];}
+  function drawFlower(){
+    fctx.globalCompositeOperation='source-over';fctx.clearRect(0,0,fc.width,fc.height);
+    if(!spriteOk||curK<0)return;
+    fctx.drawImage(sprite,curK*FL.sw,0,FL.sw,FL.sh,0,0,fc.width,fc.height);
+    fctx.globalCompositeOperation='source-in';
+    fctx.fillStyle='rgb('+Math.round(frgb[0])+','+Math.round(frgb[1])+','+Math.round(frgb[2])+')';
+    fctx.fillRect(0,0,fc.width,fc.height);
+  }
+  // la frase se tiñe como la obra que tiene debajo (tinta oscurecida para leerse sobre el papel); la flor igual mientras está sobre el papel
+  // y, cuando ya acompaña a las obras, con el color de nombre de cada una y un halo
+  var PK=0.608;   // fuerza de la tinta original de la frase (canal rojo)
+  // la frase se pinta en un canvas con la misma cuenta que el filtro SVG (iOS no aplica ese filtro al vídeo): salida = 255 - k·(255 - entrada)
+  var pc=document.getElementById('phraseC'), pctx=null, cvOK=true, KS=[1,1,1], cvTaint=false, LUT=[new Uint8Array(256),new Uint8Array(256),new Uint8Array(256)], lastT=-1, lastK='';
+  try{pctx=pc.getContext('2d',{willReadFrequently:true});}catch(e){cvOK=false;}
+  function paintPhrase(force){
+    if(!cvOK||!pctx)return;
+    var st=intro.classList.contains('static'), src=st?document.getElementById('introStill'):vid;
+    if(!src)return;
+    var w=st?src.naturalWidth:src.videoWidth, h=st?src.naturalHeight:src.videoHeight;
+    if(!src||!w||!h||(!st&&src.readyState<2))return;
+    if(!force&&!st&&src.currentTime===lastT&&lastK==='')return;
+    lastT=src.currentTime;
+    try{
+      if(pc.width!==w||pc.height!==h){pc.width=w;pc.height=h;}
+      // igual que el filtro SVG: la tinta es el canal rojo del vídeo (255-R) y cada canal de salida es 255 - k·tinta
+      var x=pctx;
+      x.globalCompositeOperation='source-over';x.fillStyle='#fff';x.fillRect(0,0,w,h);
+      x.drawImage(src,0,0,w,h);
+      var done=false;
+      if(!cvTaint){
+        try{
+          var im=x.getImageData(0,0,w,h), d=im.data, A=LUT[0], B=LUT[1], C=LUT[2];
+          for(var p=0,n=d.length;p<n;p+=4){var R=d[p];d[p]=A[R];d[p+1]=B[R];d[p+2]=C[R];}
+          x.putImageData(im,0,0);done=true;
+        }catch(e){cvTaint=true;}
+      }
+      if(!done){
+        // vídeo de otro origen (no se pueden leer píxeles): aproximación con mezclas del canvas, tinta por luminosidad
+        x.globalCompositeOperation='saturation';x.fillStyle='#000';x.fillRect(0,0,w,h);
+        x.globalCompositeOperation='difference';x.fillStyle='#fff';x.fillRect(0,0,w,h);
+        x.globalCompositeOperation='multiply';x.fillStyle='rgb('+Math.round(KS[0]*113)+','+Math.round(KS[1]*113)+','+Math.round(KS[2]*113)+')';x.fillRect(0,0,w,h);
+        x.globalCompositeOperation='lighter';x.drawImage(pc,0,0);
+        x.globalCompositeOperation='difference';x.fillStyle='#fff';x.fillRect(0,0,w,h);
+      }
+      x.globalCompositeOperation='source-over';
+      intro.classList.add('cv');
+    }catch(e){cvOK=false;intro.classList.remove('cv');}
+  }
+  function applyPhrase(c){
+    function m(v){return (1-v/255)/PK;}
+    var r=m(c[0]),g=m(c[1]),b=m(c[2]);
+    KS=[Math.min(2,r),Math.min(2,g),Math.min(2,b)];
+    [r,g,b].forEach(function(k,ch){for(var v=0;v<256;v++){LUT[ch][v]=Math.max(0,Math.min(255,Math.round(255-k*(255-v))));}});
+    paintPhrase(true);
+    tintM.setAttribute('values',r+' 0 0 0 '+(1-r)+'  '+g+' 0 0 0 '+(1-g)+'  '+b+' 0 0 0 '+(1-b)+'  0 0 0 1 0');
+  }
+  function targets(){
+    var w=WORKS[i], v=root.classList.contains('veiled')||root.classList.contains('menu-open');
+    var f=(onPaper||v)?w.label:(mobile.matches?w.fm:w.fd);
+    return [hex2rgb(w.label),hex2rgb(f)];
+  }
+  function setFlowerColor(){
+    var t=targets(), pf=prgb.slice(), ff=frgb.slice(), t0=null;
+    cancelAnimationFrame(ftween);
+    function put(k){
+      prgb=[0,1,2].map(function(n){return pf[n]+(t[0][n]-pf[n])*k;});
+      frgb=[0,1,2].map(function(n){return ff[n]+(t[1][n]-ff[n])*k;});
+      applyPhrase(prgb);drawFlower();
+    }
+    if(reduce){put(1);return;}
+    function step(ts){if(t0===null)t0=ts;var k=Math.min(1,(ts-t0)/900);put(k);if(k<1)ftween=requestAnimationFrame(step);}
+    ftween=requestAnimationFrame(step);
+  }
+  var rafS=0;
+  window.addEventListener('scroll',function(){
+    if(rafS)return;rafS=requestAnimationFrame(function(){rafS=0;
+      var p=window.scrollY<intro.offsetHeight*0.55;if(p!==onPaper){onPaper=p;setFlowerColor();}placeFlower();});
+  },{passive:true});
+  var AN={x:0,y:0,s:1}, HD=0, WD=0, STEMF=0.425;
+  function layoutFlower(){
+    var el=intro.classList.contains('static')?document.getElementById('introStill'):document.getElementById('introVid');
+    var r=el.getBoundingClientRect(); if(!r.width||!r.height)return;
+    var Wa=FL.fw*r.width, Ha=FL.fh*r.height, d=Math.min(window.devicePixelRatio||1,2);
+    // tamaño de reposo en la ventana: en móvil la flor crece al bajar para no quedar minúscula
+    HD=Math.max(Ha,Math.min(.24*window.innerHeight,240)); WD=HD*FL.sw/FL.sh;
+    AN.s=Ha/HD;
+    AN.x=r.left+window.scrollX+FL.fx*r.width+STEMF*Wa;
+    AN.y=r.top+window.scrollY+FL.fy*r.height+Ha;
+    fc.style.width=WD+'px';fc.style.height=HD+'px';fc.style.transformOrigin=(STEMF*WD)+'px '+HD+'px';
+    fc.width=Math.max(1,Math.round(WD*d));fc.height=Math.max(1,Math.round(HD*d));drawFlower();placeFlower();
+  }
+  // al bajar, la flor desciende hasta la ventana de la obra y queda plantada en ella, por delante
+  function placeFlower(){
+    if(!HD)return;
+    var p=Math.max(0,Math.min(1,window.scrollY/Math.max(1,intro.offsetHeight)));
+    var lr=document.getElementById('label').getBoundingClientRect(), cr=carousel.getBoundingClientRect();
+    var by=AN.y+((lr.top-cr.top+14)-AN.y)*p, sc=AN.s+(1-AN.s)*p;
+    fc.style.transform='translate3d('+(AN.x-STEMF*WD)+'px,'+(by-HD)+'px,0) scale('+sc+')';
+  }
+  sprite.onload=function(){spriteOk=true;drawFlower();};sprite.src='img/flor-hoja.png';
+  if(window.ResizeObserver){var ro=new ResizeObserver(layoutFlower);ro.observe(document.getElementById('introVid'));ro.observe(document.getElementById('introStill'));}
+  window.addEventListener('resize',layoutFlower);
+
+  // entrada: vídeo, y a los 3 s de acabar la página baja sola a la obra
+  var vid=document.getElementById('introVid'), auto=null, gone=false;
+  var mob=mobile.matches;
+  vid.src=mob?'img/intro-m.mp4':'img/intro.mp4';
+  document.getElementById('introStill').src=mob?'img/intro-m-last.jpg':'img/intro-last.jpg';
+  function snapOn(){root.classList.add('snap');}
+  function goObra(){carousel.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});setTimeout(snapOn,1500);}
+  function cancelAuto(){clearTimeout(auto);auto=null;gone=true;}
+  ['wheel','touchstart','keydown','pointerdown'].forEach(function(ev){window.addEventListener(ev,cancelAuto,{passive:true,once:true});window.addEventListener(ev,snapOn,{passive:true,once:true});});
+  function flowerLoop(){
+    var k=Math.floor((vid.currentTime*1000-FL.t0)/FL.dt);k=Math.max(-1,Math.min(FL.n-1,k));
+    if(k!==curK){curK=k;drawFlower();}
+    paintPhrase(false);
+    if(!vid.ended&&!vid.paused)requestAnimationFrame(flowerLoop);
+  }
+  function flowerEnd(){curK=FL.n-1;drawFlower();}
+  vid.addEventListener('play',flowerLoop);vid.addEventListener('seeked',flowerLoop);
+  vid.addEventListener('ended',function(){flowerEnd();paintPhrase(true);});['loadeddata','seeked','playing'].forEach(function(ev){vid.addEventListener(ev,function(){paintPhrase(true);});});document.getElementById('introStill').addEventListener('load',function(){paintPhrase(true);});vid.addEventListener('loadedmetadata',layoutFlower);
+  function ended(){if(gone||window.scrollY>10)return;auto=setTimeout(function(){if(!gone&&window.scrollY<=10)goObra();},3000);}
+  if(reduce){intro.classList.add('static');flowerEnd();layoutFlower();}
+  else{
+    vid.addEventListener('ended',ended);
+    vid.addEventListener('error',function(){intro.classList.add('static');flowerEnd();layoutFlower();ended();});
+    var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){intro.classList.add('static');flowerEnd();layoutFlower();ended();});
+  }
+  // qué se ve: con la entrada en pantalla, nombre y menú en tinta y el carrusel parado
+  function setIntro(on){
+    if(on===root.classList.contains('onintro'))return;
+    root.classList.toggle('onintro',on);
+    if(on){['--fgnow','--namecol','--shade','--fhalo','--nshade'].forEach(function(p){root.style.removeProperty(p);});setFlowerColor();}
+    else{applyFg();}
+  }
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){es.forEach(function(e){setIntro(e.intersectionRatio>=0.5);});},{threshold:[0,.5,1]}).observe(intro);
+  }
+  root.classList.add('onintro');
+  applyPhrase(prgb);
+  show(0);
+})();
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-lang]');if(a){try{localStorage.setItem('lang',a.getAttribute('data-lang'));}catch(_){}}});
+</script>
+
+</body></html>

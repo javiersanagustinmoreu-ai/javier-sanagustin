@@ -1,0 +1,138 @@
+/* Páginas interiores. Misma cabecera que la portada; el papel como superficie; las obras son lo único con color. */
+:root{--ink:#141412;--mute:#6b6862;--display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --pad:clamp(16px,3vw,40px);--gutter-l:max(var(--pad),env(safe-area-inset-left,0px));--gutter-r:max(var(--pad),env(safe-area-inset-right,0px));color-scheme:light}
+*{box-sizing:border-box}
+html{background:#f4f0ec}
+body{margin:0;min-height:100vh;color:var(--ink);font:400 1rem/1.45 var(--body)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(rgba(244,240,236,.6),rgba(244,240,236,.6)),#f4f0ec url("img/papel.jpg") center/cover no-repeat}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;padding:calc(var(--pad) * .7 + env(safe-area-inset-top,0px)) var(--gutter-r) 1.2rem var(--gutter-l)}
+.name{margin:0;font:800 clamp(1.7rem,3.6vw,3.4rem)/.92 var(--display);letter-spacing:-.025em;max-width:9em}
+.name a{text-decoration:none}
+nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.35rem 1.6rem;max-width:58rem}
+nav a{display:block;padding:.35rem 0;text-decoration:none;font-weight:500;font-size:.98rem;letter-spacing:.02em;border-bottom:1px solid transparent}
+nav a:hover,nav a:focus-visible,nav a[aria-current]{border-bottom-color:currentColor}
+.menu-btn{display:none;background:none;border:1px solid currentColor;padding:.45rem .9rem;cursor:pointer;font:500 1rem var(--body);letter-spacing:.04em}
+@media (max-width:760px){
+  .menu-btn{display:inline-block}
+  nav ul{position:fixed;inset:0;z-index:7;background:rgba(244,240,236,.97);flex-direction:column;justify-content:center;align-items:flex-start;gap:.6rem;padding:0 var(--gutter-l);max-width:none;display:none}
+  nav ul a{font:700 2rem/1.15 var(--display);letter-spacing:-.01em}
+  html.menu-open nav ul{display:flex}
+  html.menu-open .menu-btn{position:relative;z-index:8}
+}
+
+/* tira de obra: todas a la misma altura, cada una con su proporción real */
+.strip{--h:min(64vh,620px);display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x proximity;padding:clamp(20px,4vh,56px) var(--gutter-r) 40px var(--gutter-l);scroll-padding-left:var(--gutter-l);scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
+.strip figure{margin:0;flex:none;scroll-snap-align:start}
+.strip img{display:block;height:var(--h);width:auto;max-width:none}
+.strip button.zoom{display:block;padding:0;border:0;background:none;cursor:zoom-in}
+.strip figcaption,.cap{width:0;min-width:100%;padding-top:.7rem;font-size:.88rem;line-height:1.45;color:var(--mute)}
+.strip figcaption b,.cap b{display:block;color:var(--ink);font-weight:600;font-size:.95rem}
+.strip figure.chap{width:min(20rem,72vw);height:var(--h);display:flex;align-items:flex-end;padding:0 1.5rem 0 .5rem;border-left:1px solid var(--ink);margin-left:12px}
+.strip figure.chap h2{margin:0 0 .4rem;font:700 clamp(1.6rem,3vw,2.3rem)/1.05 var(--display);letter-spacing:-.01em;text-wrap:balance}
+.strip figure.yr{height:var(--h);display:flex;align-items:flex-end;padding:0 .2rem 0 .9rem;margin-right:-6px}
+.strip figure.yr span{font:700 clamp(1.1rem,1.8vw,1.4rem)/1 var(--display);color:var(--mute);letter-spacing:.02em;writing-mode:vertical-rl;transform:rotate(180deg)}
+.strip figure.chap p{margin:0;color:var(--mute);font-size:.9rem;line-height:1.4}
+.sold{color:var(--ink)}
+.go{position:fixed;top:50%;translate:0 -50%;z-index:4;width:50px;height:50px;border:0;background:var(--ink);color:#fff;cursor:pointer;display:grid;place-items:center}
+.go svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2}
+.go.l{left:0}.go.r{right:0}.go[hidden]{display:none}
+@media (hover:none){.go{display:none}}
+@media (max-width:760px){.strip{--h:min(52vh,420px);gap:14px}}
+
+/* ampliar */
+dialog{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100vw;height:100vh;color:var(--ink)}
+dialog::backdrop{background:#f4f0ec}
+.sheet{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,22rem);gap:clamp(20px,4vw,56px);height:100%;padding:var(--pad);align-items:center}
+.sheet .pic{display:flex;justify-content:center;align-items:center;min-width:0;height:100%}
+.sheet .pic img{max-width:100%;max-height:calc(100vh - 2 * var(--pad));object-fit:contain}
+.sheet h2{margin:0 0 .3rem;font:800 clamp(1.6rem,3vw,2.6rem)/1 var(--display);letter-spacing:-.02em}
+.sheet dl{margin:1.2rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1.2rem;font-size:.95rem}
+.sheet dt{color:var(--mute)}.sheet dd{margin:0}
+.tabs{display:flex;gap:1.4rem;margin:1.4rem 0 1rem;border-bottom:1px solid rgba(20,20,18,.25)}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:.4rem 0;margin-bottom:-1px;font:500 .95rem var(--body);cursor:pointer;color:var(--mute)}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--ink)}
+.price{font:700 2rem/1 var(--display);letter-spacing:-.02em;margin:0 0 .6rem}
+.btn{display:inline-block;margin-top:1rem;padding:.7rem 1.2rem;background:var(--ink);color:#fff;text-decoration:none;font-weight:500;letter-spacing:.02em}
+.close{position:absolute;top:calc(var(--pad) * .7);right:var(--gutter-r);width:44px;height:44px;border:1px solid var(--ink);background:rgba(244,240,236,.9);cursor:pointer;font-size:1.3rem;line-height:1}
+@media (max-width:760px){.sheet{grid-template-columns:1fr;grid-template-rows:auto auto;align-content:start;align-items:start;overflow:auto;padding-top:64px}.sheet .pic{height:42vh}.sheet .pic img{max-height:100%}.sheet .info{max-height:none;overflow:visible}}
+
+/* en venta: rejilla de tienda, tarjetas iguales, la obra entera sobre su baldosa */
+.wall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(28px,4vw,56px) clamp(18px,2.4vw,32px);padding:clamp(20px,4vh,48px) var(--gutter-r) 56px var(--gutter-l)}
+@media (min-width:1240px){.wall{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:980px){.wall{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.wall{gap:28px 12px}}
+.card{display:flex;flex-direction:column}
+.tile{position:relative;display:block;aspect-ratio:1/1;padding:0;border:1px solid rgba(20,20,18,.14);background:rgba(255,255,255,.45);cursor:pointer;transition:background .2s,border-color .2s}
+.tile:hover,.tile:focus-visible{background:rgba(255,255,255,.8);border-color:var(--ink)}
+.tile img{position:absolute;inset:8%;width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(20,20,18,.22))}
+.meta{padding-top:.8rem}
+.meta h2{margin:0;font:700 1.15rem/1.2 var(--display);letter-spacing:-.01em}
+.spec{margin:.25rem 0 .7rem;font-size:.88rem;line-height:1.45;color:var(--mute)}
+.row{margin:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem .8rem}
+.pr{font:700 1.05rem var(--display);white-space:nowrap}
+.ask{padding:.45rem .9rem;border:1px solid var(--ink);background:transparent;font:500 .9rem var(--body);cursor:pointer}
+.ask:hover,.ask:focus-visible{background:var(--ink);color:#fff}
+/* texto en la ficha */
+.sheet .info{max-height:calc(100vh - 2 * var(--pad));overflow:auto;padding-right:.3rem}
+.sheet .info p{margin:0 0 .9rem;line-height:1.5}
+.sheet .ref{color:var(--mute);font-size:.9rem}
+.more{font-weight:500}
+
+/* Reflejos y sombras: la sala a escala relativa */
+.sala{display:flex;align-items:flex-start;gap:clamp(28px,3vw,48px);overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-left:var(--gutter-l);padding:clamp(12px,3vh,40px) var(--gutter-r) 40px var(--gutter-l);scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
+.sala .intro{flex:none;width:min(24rem,80vw);height:calc(var(--box) + 5rem);scroll-snap-align:start;padding-right:1rem}
+.sala .intro h2{margin:0 0 .7rem;font:800 clamp(1.9rem,3.4vw,3rem)/.95 var(--display);letter-spacing:-.025em}
+.sala .intro p{margin:0 0 .9rem;line-height:1.5;max-width:30rem}
+.sala .intro .when{color:var(--mute);font-size:.92rem}
+.sala .intro .leg{margin-top:1.4rem;display:flex;gap:1.4rem;font-weight:500}
+.sala .intro .leg2{color:var(--mute);font-size:.88rem}
+.sala figure{margin:0;flex:none;scroll-snap-align:start;width:max(var(--w,200px),11.5rem)}
+.sala .blk{display:block;height:1.6rem;white-space:nowrap;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.sala .box{height:var(--box);display:flex;align-items:flex-end;justify-content:flex-start}
+.sala .zoom{display:block;padding:0;border:0;background:none;cursor:zoom-in}
+.sala img{display:block;width:var(--w);height:var(--hh);max-width:none}
+.sala figcaption{width:100%;padding-top:.7rem;font-size:.88rem;line-height:1.45;color:var(--mute)}
+.sala figcaption b{display:block;color:var(--ink);font-weight:600;font-size:.95rem}
+@media (max-width:760px){.sala .intro{width:78vw}}
+
+.sala .intro .links{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:1.2rem}
+.sala .intro .links a{font-weight:500}
+.catalogo{margin:0 var(--gutter-r) 80px var(--gutter-l);padding-top:1.2rem;border-top:1px solid rgba(20,20,18,.25);max-width:60rem;font-size:.95rem}
+.catalogo b{display:block;font-weight:600}
+.catalogo a{font-weight:500}
+
+/* páginas de texto: columna estrecha, texto a la izquierda y fotos a la derecha */
+.page{display:grid;grid-template-columns:minmax(0,34rem) minmax(0,24rem);gap:clamp(32px,6vw,88px);justify-content:center;padding:clamp(24px,6vh,72px) var(--gutter-r) 96px var(--gutter-l)}
+.page h2{margin:0 0 1.6rem;font:800 clamp(2rem,4vw,3.2rem)/1 var(--display);letter-spacing:-.025em}
+.page h3{margin:2.4rem 0 .7rem;font:600 .78rem/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.page p{margin:0 0 1rem;line-height:1.55}
+.page a{font-weight:500}
+.arrow-link{text-decoration:none;border-bottom:1px solid currentColor}
+.crumb{margin-bottom:1.6rem!important;font-size:.9rem}
+.cv{margin:0;display:grid;grid-template-columns:5.2rem 1fr;gap:.55rem 1rem;font-size:.95rem;line-height:1.45}
+.cv dt{color:var(--mute)}.cv dd{margin:0}
+.pics{display:flex;flex-direction:column;gap:2.4rem}
+.pics figure{margin:0}
+.pics img{display:block;width:100%;height:auto}
+.pics figcaption{padding-top:.5rem;font-size:.84rem;line-height:1.45;color:var(--mute)}
+.pics figcaption:empty{display:none}
+@media (max-width:860px){.page{grid-template-columns:minmax(0,1fr)}.cv{grid-template-columns:4.4rem 1fr}}
+
+/* idioma y tabla de obras */
+nav li.lang a{font-size:.85rem;letter-spacing:.1em;color:var(--mute)}
+nav li.lang a:hover,nav li.lang a:focus-visible{color:var(--ink)}
+.tabwrap{overflow-x:auto;margin:0 0 1rem}
+table.lista{border-collapse:collapse;width:100%;font-size:.88rem;line-height:1.4}
+table.lista th,table.lista td{padding:.45rem .8rem .45rem 0;text-align:left;vertical-align:top;border-bottom:1px solid rgba(20,20,18,.18);font-weight:400}
+table.lista thead th{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:600}
+table.lista tbody th{font-weight:600}
+table.lista td:first-child{color:var(--mute)}
+table.lista td:nth-child(5){white-space:nowrap}
+
+.sala figure.cover,.sala figure.foto{flex:none;display:flex;flex-direction:column;justify-content:flex-end;height:calc(var(--box) + 5rem)}
+.sala figure.cover .box,.sala figure.foto .box{height:var(--box);display:flex;align-items:flex-end}
+.sala figure.cover img,.sala figure.foto img{height:100%;width:auto;display:block}
+.sala figure.cover,.sala figure.foto{width:auto}
+.info .fine{font-size:.85rem;opacity:.75}.info .fine a{text-decoration:underline}
