@@ -3,14 +3,14 @@
   var EN=root.lang==='en';
   var S=EN?{sold:'Sold',lent:'Sold, lent to the exhibition',tText:'Text',tFicha:'Details',tBuy:'Acquire',close:'Close',tec:'Medium',size:'Size',year:'Year',state:'Status',coll:'Collection',ref:'Reference: ',more:'Full process and reference ↗',
       ask:'Works are sold through the Sanagustín School of Drawing and Painting. Press “I’m interested” and I will reply with the price (VAT included), availability and shipping.',write:'I\u2019m interested',onreq:'Price on request',legal:'By writing, you send your email to the seller. See the <a href="aviso.html">legal notice and privacy (in Spanish)</a>.',body:'Hello, I am interested in «%». Could you tell me the price, availability and shipping? Thank you.',subj:'Enquiry about «%»',enl:'Enlarge ',read:'Read the text of ',
-      refl:'Reflection',shad:'Shadow',rel:'Each work at its relative size.',web:'Exhibition website ↗',cat:'Catalogue, ',enq:'Enquire',view:'View ',
-      catP:'<b>Exhibition catalogue</b> The fourteen works of <i>Reflejos y sombras</i> with their texts. ',buy:'Buy, ',
+      refl:'Reflection',shad:'Shadow',rel:'Each work at its relative size.',web:'Exhibition website ↗',cat:'Catalogue, ',enq:'I\u2019m interested',view:'View ',
+      catP:'<b>Exhibition catalogue</b> The fourteen works of <i>Reflejos y sombras</i> with their texts. ',buy:'Catalogue, ',
       intro:'<p class="when">First solo exhibition<br>Palacio de Villahermosa, Fundación Ibercaja, Huesca<br>8 October – 11 November 2026</p><p>These landscapes are from here. These people are close to me. These moments are mine. And yet something in them shifts. Sometimes I recognise myself. Other times, I don’t.</p><p>What came out recognisable is a reflection. What came out transformed, displaced, is a shadow.</p>',
       h2:'Reflejos y sombras',h2sub:'',th:['No.','Work','Year','Medium','Size','Note']}
     :{sold:'Vendida',lent:'Vendida, cedida a la exposición',tText:'Texto',tFicha:'Ficha',tBuy:'Adquirir',close:'Cerrar',tec:'Técnica',size:'Medidas',year:'Año',state:'Estado',coll:'Colección',ref:'Referencia: ',more:'Proceso y referencia completos ↗',
       ask:'Las obras se venden a través de la Escuela de Dibujo y Pintura Sanagustín. Pulsa «Me interesa» y te respondo con el precio (IVA incluido), la disponibilidad y el envío.',write:'Me interesa',onreq:'Precio bajo consulta',legal:'Al escribir envías tu correo al titular. Más en el <a href="aviso.html">aviso legal y privacidad</a>.',body:'Hola, me interesa «%». ¿Podrías decirme el precio, la disponibilidad y el envío? Gracias.',subj:'Consulta sobre «%»',enl:'Ampliar ',read:'Leer el texto de ',
-      refl:'Reflejo',shad:'Sombra',rel:'Cada obra, a su tamaño relativo.',web:'Web de la exposición ↗',cat:'Catálogo, ',enq:'Consultar',view:'Ver ',
-      catP:'<b>Catálogo de la exposición</b> Las catorce obras de <i>Reflejos y sombras</i> con sus textos. ',buy:'Comprar, ',
+      refl:'Reflejo',shad:'Sombra',rel:'Cada obra, a su tamaño relativo.',web:'Web de la exposición ↗',cat:'Catálogo, ',enq:'Me interesa',view:'Ver ',
+      catP:'<b>Catálogo de la exposición</b> Las catorce obras de <i>Reflejos y sombras</i> con sus textos. ',buy:'Catálogo, ',
       intro:'<p class="when">Primera exposición individual<br>Palacio de Villahermosa, Fundación Ibercaja, Huesca<br>8 de octubre – 11 de noviembre de 2026</p><p>Estos paisajes son de aquí. Estas personas son cercanas. Estos momentos son míos. Y, sin embargo, algo en ellos se desplaza. Unas veces me reconozco. Otras, no.</p><p>Lo que salió reconocible es un reflejo. Lo que salió transformado, desplazado, es una sombra.</p>',
       h2:'Reflejos y sombras',h2sub:'',th:['N.º','Obra','Año','Técnica','Medidas','Nota']};
   var TEC={'Técnica mixta sobre lienzo':'Mixed media on canvas','Óleo sobre lienzo':'Oil on canvas','Óleo sobre tabla':'Oil on panel','Óleo sobre lienzo, políptico':'Oil on canvas, polyptych',
@@ -45,7 +45,7 @@
     var st=stl(o);
     var h='<button class="close" type="button" aria-label="'+S.close+'" id="dx">×</button><div class="sheet"><div class="pic"><img src="'+o.src+'" alt="'+esc(alt(o))+'"></div><div class="info"><h2>'+esc(o.t)+'</h2>'
      +'<div class="tabs" role="tablist">'+tabs.map(function(t,k){return '<button role="tab" aria-selected="'+(k===0)+'" data-tab="'+t[0]+'">'+t[1]+'</button>';}).join('')+'</div>'+pt
-     +'<div data-pane="f"'+(tx?' hidden':'')+'><dl><dt>'+S.tec+'</dt><dd>'+esc(tec(o.tec))+'</dd>'+(o.m?'<dt>'+S.size+'</dt><dd>'+esc(mm(o.m))+'</dd>':'')+(o.y?'<dt>'+S.year+'</dt><dd>'+o.y+'</dd>':'')+(st?'<dt>'+S.state+'</dt><dd>'+st+'</dd>':(o.e?'<dt>'+S.coll+'</dt><dd>'+esc(EN?({'Colección privada':'Private','Colección del artista':'Artist’s'}[o.e]||o.e):o.e.replace('Colección ',''))+'</dd>':''))+'</dl></div>'
+     +'<div data-pane="f"'+(tx?' hidden':'')+'><dl>'+(o.tec?'<dt>'+S.tec+'</dt><dd>'+esc(tec(o.tec))+'</dd>':'')+(o.m?'<dt>'+S.size+'</dt><dd>'+esc(mm(o.m))+'</dd>':'')+(o.y?'<dt>'+S.year+'</dt><dd>'+o.y+'</dd>':'')+(st?'<dt>'+S.state+'</dt><dd>'+st+'</dd>':(o.e?'<dt>'+S.coll+'</dt><dd>'+esc(EN?({'Colección privada':'Private','Colección del artista':'Artist’s'}[o.e]||o.e):o.e.replace('Colección ',''))+'</dd>':''))+'</dl></div>'
      +(avail?'<div data-pane="p" hidden><p class="price">'+S.onreq+'</p><p>'+S.ask+'</p><p class="fine">'+S.legal+'</p><a class="btn" href="mailto:'+window.CONTACTO+'?subject='+encodeURIComponent(S.subj.replace('%',o.t))+'&body='+encodeURIComponent(S.body.replace('%',o.t))+'">'+S.write+'</a></div>':'')
      +'</div></div>';
     dlg.innerHTML=h;

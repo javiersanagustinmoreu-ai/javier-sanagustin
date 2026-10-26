@@ -23,7 +23,7 @@ nav a:hover,nav a:focus-visible,nav a[aria-current]{border-bottom-color:currentC
 }
 
 /* tira de obra: todas a la misma altura, cada una con su proporción real */
-.strip{--h:min(64vh,620px);display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x proximity;padding:clamp(20px,4vh,56px) var(--gutter-r) 40px var(--gutter-l);scroll-padding-left:var(--gutter-l);scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
+.strip{--h:max(240px,min(64vh,620px,calc(100dvh - 340px)));display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x proximity;padding:clamp(20px,4vh,56px) var(--gutter-r) 40px var(--gutter-l);scroll-padding-left:var(--gutter-l);scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
 .strip figure{margin:0;flex:none;scroll-snap-align:start}
 .strip img{display:block;height:var(--h);width:auto;max-width:none}
 .strip button.zoom{display:block;padding:0;border:0;background:none;cursor:zoom-in}

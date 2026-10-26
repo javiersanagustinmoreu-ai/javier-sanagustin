@@ -83,6 +83,7 @@ html.paused .daisy.run .p{animation-play-state:paused}
 @media (max-width:760px){
   .intro{padding:56px 10px 10px}
   .menu-btn{display:inline-block}
+  html:not(.onintro):not(.menu-open) .menu-btn{background:rgba(244,240,236,.88);color:#141412;border-color:#141412;text-shadow:none}
   nav ul{position:fixed;inset:0;z-index:7;background:var(--veil);backdrop-filter:blur(2px);flex-direction:column;justify-content:center;align-items:flex-start;gap:.6rem;padding:0 var(--gutter-l);max-width:none;display:none;color:var(--ink);text-shadow:none}
   nav ul a{font:700 2rem/1.15 var(--display);letter-spacing:-.01em}
   html.menu-open nav ul{display:flex}
@@ -302,7 +303,9 @@ html.paused .daisy.run .p{animation-play-state:paused}
       var p=window.scrollY<intro.offsetHeight*0.55;if(p!==onPaper){onPaper=p;setFlowerColor();}placeFlower();});
   },{passive:true});
   var AN={x:0,y:0,s:1}, HD=0, WD=0, STEMF=0.425;
-  function layoutFlower(){
+  var padNav=null;
+  function fitPad(){var nv=document.querySelector('header nav');if(!nv)return;if(window.scrollY<5||padNav===null)padNav=nv.getBoundingClientRect().bottom;intro.style.paddingTop=Math.round(padNav+4)+'px';}
+  function layoutFlower(){fitPad();
     var el=intro.classList.contains('static')?document.getElementById('introStill'):document.getElementById('introVid');
     var r=el.getBoundingClientRect(); if(!r.width||!r.height)return;
     var Wa=FL.fw*r.width, Ha=FL.fh*r.height, d=Math.min(window.devicePixelRatio||1,2);
