@@ -55,6 +55,8 @@
       [].forEach.call(dlg.querySelectorAll('[data-tab]'),function(x){x.setAttribute('aria-selected',x===b?'true':'false');});
       [].forEach.call(dlg.querySelectorAll('[data-pane]'),function(p){p.hidden=p.dataset.pane!==b.dataset.tab;});});});
     if(tab){var tb=dlg.querySelector('[data-tab="'+tab+'"]');if(tb)tb.click();}
+    var u0=location.href;try{history.replaceState(null,'',(EN?'en/obras/':'obras/')+o.id+'.html');}catch(_){}
+    dlg.addEventListener('close',function r(){try{history.replaceState(null,'',u0);}catch(_){}dlg.removeEventListener('close',r);});
     dlg.showModal();
   }
   document.addEventListener('click',function(e){var z=e.target.closest('[data-open]');if(z)open(z.dataset.open,z.dataset.tab);});
