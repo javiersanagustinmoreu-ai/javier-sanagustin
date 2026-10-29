@@ -24,6 +24,7 @@
   function eur(n){return EN?'€'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','):String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' €';}
   var EX=window.EXTRA||[];
   function by(id){return O.filter(function(o){return o.id===id;})[0]||EX.filter(function(o){return o.id===id;})[0];}
+  function th(s){return s.replace(/^img\/(.*)\.(jpe?g|png|webp)$/i,'img/th/$1.webp');}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function parts(o){return [tec(o.tec),mm(o.m),o.y].filter(Boolean).map(esc).join(', ');}
   function alt(o){return o.t+'. '+[tec(o.tec),mm(o.m),o.y].filter(Boolean).join(', ');}
@@ -60,28 +61,44 @@
 
   var strip=document.getElementById('strip');
   if(strip){
-    // tres capítulos (Pintura, Dibujo, Dibujo digital); dentro de cada uno, de la obra más reciente a la más antigua. Sin año, al final.
-    var CAT=EN?{p:['Painting','paintings'],d:['Drawing','graphite drawings'],g:['Digital drawing','Meditations, without pretension']}:{p:['Pintura','pinturas'],d:['Dibujo','dibujos a grafito'],g:['Dibujo digital','Meditaciones, sin pretensión']};
+    // Obra: una sola tira con todo, de la más reciente a la más antigua; tarjeta inicial con filtros Pintura · Dibujo · Digital
+    var CAT=EN?{a:['Work','works'],p:['Painting','paintings'],d:['Drawing','graphite drawings'],g:['Digital','digital drawings, Meditations']}:{a:['Obra','obras'],p:['Pintura','pinturas'],d:['Dibujo','dibujos a grafito'],g:['Digital','dibujos digitales, Meditaciones']};
+    var FLT=EN?{all:'All',lab:'Filter by type'}:{all:'Todo',lab:'Filtrar por tipo'};
     function catOf(o){return o.sec==='Dibujos a grafito'?'d':o.sec==='Meditaciones'?'g':'p';}
     function yrOf(o){var m=String(o.y||'').match(/\d{4}/g);return m?Math.max.apply(null,m.map(Number)):-1;}
     var ALL=O.concat(EX).map(function(o,n){return {o:o,n:n,c:catOf(o),y:yrOf(o)};});
-    function fig(o,k){return '<figure><button class="zoom" type="button" data-open="'+o.id+'" aria-label="'+S.enl+esc(o.t)+'"><img src="'+o.src+'" alt="'+esc(alt(o))+'"'+(k>1?' loading="lazy"':'')+' decoding="async"></button><figcaption>'+cap(o)+'</figcaption></figure>';}
-    var html='',k=0;
-    ['p','d','g'].forEach(function(c){
-      var L=ALL.filter(function(x){return x.c===c;}).sort(function(a,b){return (b.y-a.y)||((b.o.top?1:0)-(a.o.top?1:0))||(a.n-b.n);});
-      if(!L.length)return;
-      var ys=L.filter(function(x){return x.y>0;}).map(function(x){return x.y;}), hi=Math.max.apply(null,ys), lo=Math.min.apply(null,L.reduce(function(a,x){return a.concat(String(x.o.y||'').match(/\d{4}/g)||[]);},[]).map(Number));
-      var sub=c==='g'?CAT.g[1]:(L.length+' '+CAT[c][1]+(ys.length?', '+(lo===hi?hi:lo+'–'+hi):''));
-      html+='<figure class="chap"><div><h2>'+esc(CAT[c][0])+'</h2><p>'+esc(sub)+'</p></div></figure>';
-      var last=null;
+    function fig(o,k){return '<figure data-id="'+o.id+'"><button class="zoom" type="button" data-open="'+o.id+'" aria-label="'+S.enl+esc(o.t)+'"><img src="'+th(o.src)+'" alt="'+esc(alt(o))+'"'+(k>1?' loading="lazy"':'')+' decoding="async"></button><figcaption>'+cap(o)+'</figcaption></figure>';}
+    var cur='a',l=document.getElementById('goL'), r=document.getElementById('goR');
+    function render(c){
+      cur=c;var k=0,html='';
+      var L=ALL.filter(function(x){return c==='a'||x.c===c;}).sort(function(a,b){return (b.y-a.y)||((b.o.top?1:0)-(a.o.top?1:0))||(a.n-b.n);});
+      var yrs=L.reduce(function(a,x){return a.concat(String(x.o.y||'').match(/\d{4}/g)||[]);},[]).map(Number);
+      var lo=Math.min.apply(null,yrs),hi=Math.max.apply(null,yrs);
+      var sub=L.length+' '+CAT[c][1]+(yrs.length?', '+(lo===hi?hi:lo+'–'+hi):'');
+      var fl=['p','d','g'].map(function(f){return '<button type="button" class="flt'+(c===f?' on':'')+'" data-flt="'+f+'" aria-pressed="'+(c===f)+'">'+esc(CAT[f][0])+'</button>';}).join('');
+      html+='<figure class="chap"><div><h2>'+esc(CAT[c][0])+'</h2><p>'+esc(sub)+'</p><div class="flts" role="group" aria-label="'+FLT.lab+'">'+(c!=='a'?'<button type="button" class="flt all" data-flt="a">← '+FLT.all+'</button>':'')+fl+'</div></div></figure>';
+      var last=null,ys=L.filter(function(x){return x.y>0;});
       L.forEach(function(x){
-        if(c==='p'&&x.y>0&&x.y!==last){last=x.y;html+='<figure class="yr" aria-hidden="true"><span>'+x.y+'</span></figure>';}
+        if(x.y>0&&x.y!==last){last=x.y;html+='<figure class="yr" aria-hidden="true"><span>'+x.y+'</span></figure>';}
         html+=fig(x.o,k++);
       });
-    });
-    strip.innerHTML=html;
-    var l=document.getElementById('goL'), r=document.getElementById('goR');
+      strip.innerHTML=html;strip.scrollLeft=0;upd();
+    }
+    strip.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-flt]');if(!b)return;var f=b.dataset.flt;render(f===cur?'a':f);var nb=strip.querySelector('[data-flt="'+(f===cur||f==='a'?(f==='a'?'a':f):f)+'"]');if(nb&&nb.focus)nb.focus({preventScroll:true});});
     function upd(){var max=strip.scrollWidth-strip.clientWidth-4;l.hidden=strip.scrollLeft<4;r.hidden=strip.scrollLeft>=max;}
+    // enlace desde la portada: obra.html#id lleva a esa obra
+    function focusHash(){
+      var id=decodeURIComponent((location.hash||'').slice(1));if(!id)return;
+      var f=strip.querySelector('figure[data-id="'+id+'"]');if(!f)return;
+      var fs=[].slice.call(strip.querySelectorAll('figure[data-id]')),n=fs.indexOf(f);
+      fs.slice(0,n+1).forEach(function(g){var im=g.querySelector('img');if(im)im.loading='eager';});
+      var t0=Date.now(),moved=false;
+      function stop(){moved=true;}
+      ['wheel','touchstart','pointerdown','keydown'].forEach(function(ev){addEventListener(ev,stop,{passive:true,once:true});});
+      function center(){if(moved||Date.now()-t0>3500)return;strip.scrollTo({left:Math.max(0,f.offsetLeft-parseFloat(getComputedStyle(strip).paddingLeft)-strip.clientWidth*.12),behavior:'auto'});}
+      center();strip.addEventListener('load',center,true);setTimeout(function(){f.classList.add('hit');setTimeout(function(){f.classList.remove('hit');},3200);},250);
+    }
+    render('a');focusHash();addEventListener('hashchange',focusHash);
     function go(d){strip.scrollBy({left:d*Math.round(strip.clientWidth*.8),behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});}
     l.addEventListener('click',function(){go(-1);});r.addEventListener('click',function(){go(1);});
     strip.addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);
@@ -101,7 +118,7 @@
     var intro='<section class="intro"><h2>'+S.h2+'</h2>'+S.intro+'<p class="leg"><span>● '+S.refl+'</span> <span>○ '+S.shad+'</span></p><p class="leg2">'+S.rel+'</p><p class="links"><a href="'+window.WEBEXPO+'" target="_blank" rel="noopener">'+S.web+'</a><a href="'+window.CATALOGO.url+'" target="_blank" rel="noopener">'+S.cat+(EN?'€20':window.CATALOGO.precio)+' ↗</a></p></section>';
     var cov='<figure class="cover"><div class="box"><img src="img/portada.jpg" alt="'+(EN?'Cover piece of the exhibition Reflejos y sombras':'Pieza de portada de la exposición Reflejos y sombras')+'" decoding="async"></div><figcaption><b>Reflejos y sombras</b>'+(EN?'Cover piece of the exhibition.':'Pieza de portada de la exposición.')+'</figcaption></figure>';
     sala.innerHTML=intro+cov+O.map(function(o,k){var t=T[o.id],blk=t.b!==prev?'<span class="blk">'+esc(t.b)+'</span>':'<span class="blk"></span>';prev=t.b;var l=stl(o);
-      return '<figure data-id="'+o.id+'">'+blk+'<div class="box"><button class="zoom" type="button" data-open="'+o.id+'" aria-label="'+S.read+esc(o.t)+'"><img src="'+o.src+'" alt="'+esc(alt(o))+'"'+(k>1?' loading="lazy"':'')+' decoding="async"></button></div><figcaption><b>'+('0'+(k+1)).slice(-2)+' '+(t.d==='r'?'●':'○')+' '+esc(o.t)+'</b>'+esc(tec(o.tec))+', '+esc(mm(o.m))+', '+o.y+'.'+(l?' <span class="sold">'+l+'.</span>':'')+'</figcaption></figure>';}).join('')+[['entrada-caballete','Ojo flor, a la entrada de la sala.','Ojo flor, at the entrance to the room.'],['sala-pupila-azul','Un visitante ante Pupila azul.','A visitor in front of Pupila azul.'],['inauguracion','Inauguración de la exposición.','Opening of the exhibition.'],['performance','Performance participativa en la inauguración.','Participatory performance at the opening.']].map(function(f){return '<figure class="foto"><div class="box"><img src="img/'+f[0]+'.jpg" alt="'+esc(EN?f[2]:f[1])+'" loading="lazy" decoding="async"></div><figcaption><b>'+(EN?'The room':'La sala')+'</b>'+esc(EN?f[2]:f[1])+'</figcaption></figure>';}).join('');
+      return '<figure data-id="'+o.id+'">'+blk+'<div class="box"><button class="zoom" type="button" data-open="'+o.id+'" aria-label="'+S.read+esc(o.t)+'"><img src="'+th(o.src)+'" alt="'+esc(alt(o))+'"'+(k>1?' loading="lazy"':'')+' decoding="async"></button></div><figcaption><b>'+('0'+(k+1)).slice(-2)+' '+(t.d==='r'?'●':'○')+' '+esc(o.t)+'</b>'+esc(tec(o.tec))+', '+esc(mm(o.m))+', '+o.y+'.'+(l?' <span class="sold">'+l+'.</span>':'')+'</figcaption></figure>';}).join('')+[['entrada-caballete','Ojo flor, a la entrada de la sala.','Ojo flor, at the entrance to the room.'],['sala-pupila-azul','Un visitante ante Pupila azul.','A visitor in front of Pupila azul.'],['inauguracion','Inauguración de la exposición.','Opening of the exhibition.'],['performance','Performance participativa en la inauguración.','Participatory performance at the opening.']].map(function(f){return '<figure class="foto"><div class="box"><img src="img/'+f[0]+'.jpg" alt="'+esc(EN?f[2]:f[1])+'" loading="lazy" decoding="async"></div><figcaption><b>'+(EN?'The room':'La sala')+'</b>'+esc(EN?f[2]:f[1])+'</figcaption></figure>';}).join('');
     fit();addEventListener('resize',fit);
     var l2=document.getElementById('goL'), r2=document.getElementById('goR');
     function upd2(){var max=sala.scrollWidth-sala.clientWidth-4;l2.hidden=sala.scrollLeft<4;r2.hidden=sala.scrollLeft>=max;}
@@ -109,11 +126,11 @@
     l2.addEventListener('click',function(){go2(-1);});r2.addEventListener('click',function(){go2(1);});
     sala.addEventListener('scroll',upd2,{passive:true});addEventListener('resize',upd2);sala.addEventListener('load',upd2,true);upd2();
     document.addEventListener('keydown',function(e){if(dlg&&dlg.open)return;if(e.key==='ArrowRight')go2(1);else if(e.key==='ArrowLeft')go2(-1);});
-    sala.addEventListener('wheel',function(e){if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&!e.ctrlKey){sala.scrollLeft+=e.deltaY;e.preventDefault();}},{passive:false});
+    sala.addEventListener('wheel',function(e){if(sala.dataset.embed)return;if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&!e.ctrlKey){sala.scrollLeft+=e.deltaY;e.preventDefault();}},{passive:false});
   }
   var wall=document.getElementById('wall');
   if(wall){
-    wall.innerHTML=O.concat(EX).filter(function(o){return o.st==='d';}).map(function(o){return '<article class="card"><button class="tile" type="button" data-open="'+o.id+'" aria-label="'+S.view+esc(o.t)+'"><img src="'+o.src+'" alt="'+esc(alt(o))+'" decoding="async"></button><div class="meta"><h2>'+esc(o.t)+'</h2><p class="spec">'+esc(tec(o.tec))+'<br>'+esc(mm(o.m))+', '+o.y+'</p><p class="row"><span class="pr">'+S.onreq+'</span><button class="ask" type="button" data-open="'+o.id+'" data-tab="p">'+S.enq+'</button></p></div></article>';}).join('');
+    wall.innerHTML=O.concat(EX).filter(function(o){return o.st==='d';}).map(function(o){return '<article class="card"><button class="tile" type="button" data-open="'+o.id+'" aria-label="'+S.view+esc(o.t)+'"><img src="'+th(o.src)+'" alt="'+esc(alt(o))+'" decoding="async"></button><div class="meta"><h2>'+esc(o.t)+'</h2><p class="spec">'+esc(tec(o.tec))+'<br>'+esc(mm(o.m))+', '+o.y+'</p><p class="row"><span class="pr">'+S.onreq+'</span><button class="ask" type="button" data-open="'+o.id+'" data-tab="p">'+S.enq+'</button></p></div></article>';}).join('');
     wall.insertAdjacentHTML('afterend','<p class="catalogo">'+S.catP+'<a href="'+window.CATALOGO.url+'" target="_blank" rel="noopener">'+S.buy+(EN?'€20':window.CATALOGO.precio)+' ↗</a></p>');
   }
   // Itinerancia: tabla de las catorce obras
