@@ -62,7 +62,7 @@ nav a:hover,nav a:focus-visible{border-bottom-color:currentColor}
 footer{position:absolute;inset:auto 0 0 0;z-index:4;display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:flex-end;gap:1rem;
   padding:0 var(--gutter-r) calc(var(--pad) * .7 + env(safe-area-inset-bottom,0px)) var(--gutter-l);pointer-events:none}
 .label{display:flex;align-items:center;gap:.8rem;min-width:0;background:rgba(247,247,245,.94);color:var(--ink);padding:.55rem 1rem .55rem .7rem}
-a.label{text-decoration:none;cursor:pointer}.label .go{display:block;margin-top:.2rem;font-size:.8rem;opacity:.62;letter-spacing:.01em;transition:opacity .2s}a.label:hover .go,a.label:focus-visible .go{opacity:1;text-decoration:underline}a.label:focus-visible{outline:2px solid var(--ink);outline-offset:2px}.label b{font-weight:600}
+a.label{text-decoration:none;cursor:pointer;pointer-events:auto}.label .go{display:block;margin-top:.2rem;font-size:.8rem;opacity:.62;letter-spacing:.01em;transition:opacity .2s}a.label:hover .go,a.label:focus-visible .go{opacity:1;text-decoration:underline}a.label:focus-visible{outline:2px solid var(--ink);outline-offset:2px}.label b{font-weight:600}
 .label span{opacity:.72}
 .label .txt{min-width:0;font-size:.95rem;line-height:1.3}
 .label{max-width:min(34rem,calc(100vw - 9.5rem))}
@@ -324,7 +324,7 @@ html.paused .daisy.run .p{animation-play-state:paused}
     var r=el.getBoundingClientRect(); if(!r.width||!r.height)return;
     var Wa=FL.fw*r.width, Ha=FL.fh*r.height, d=Math.min(window.devicePixelRatio||1,2);
     // tamaño de reposo en la ventana: en móvil la flor crece al bajar para no quedar minúscula
-    HD=Math.max(Ha,Math.min(.24*window.innerHeight,240)); WD=HD*FL.sw/FL.sh;
+    HD=Math.max(Ha,Math.min(.17*window.innerHeight,170)); WD=HD*FL.sw/FL.sh;
     AN.s=Ha/HD;
     AN.x=r.left+window.scrollX+FL.fx*r.width+STEMF*Wa;
     AN.y=r.top+window.scrollY+FL.fy*r.height+Ha;
@@ -337,7 +337,8 @@ html.paused .daisy.run .p{animation-play-state:paused}
     var p=Math.max(0,Math.min(1,window.scrollY/Math.max(1,intro.offsetHeight)));
     var lr=document.getElementById('label').getBoundingClientRect(), cr=carousel.getBoundingClientRect();
     var by=AN.y+((lr.top-cr.top+14)-AN.y)*p, sc=AN.s+(1-AN.s)*p;
-    fc.style.transform='translate3d('+(AN.x-STEMF*WD)+'px,'+(by-HD)+'px,0) scale('+sc+')';
+    var air=Math.max(34,parseFloat(getComputedStyle(root).getPropertyValue('--pad'))||0)+10, right=AN.x+(1-STEMF)*WD*sc, dx=p*Math.min(0,(document.documentElement.clientWidth-air)-right);
+    fc.style.transform='translate3d('+(AN.x-STEMF*WD+dx)+'px,'+(by-HD)+'px,0) scale('+sc+')';
   }
   sprite.onload=function(){spriteOk=true;drawFlower();};sprite.src='img/flor-hoja.png';
   if(window.ResizeObserver){var ro=new ResizeObserver(layoutFlower);ro.observe(document.getElementById('introVid'));ro.observe(document.getElementById('introStill'));}
