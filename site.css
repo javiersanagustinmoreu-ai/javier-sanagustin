@@ -18,6 +18,7 @@ nav a:hover,nav a:focus-visible,nav a[aria-current]{border-bottom-color:currentC
   .menu-btn{display:inline-block}
   nav ul{position:fixed;inset:0;z-index:7;background:rgb(244,240,236);flex-direction:column;justify-content:center;align-items:flex-start;gap:.6rem;padding:0 var(--gutter-l);max-width:none;display:none}
   nav ul a{font:700 2rem/1.15 var(--display);letter-spacing:-.01em}
+  nav ul{background-image:url(img/flor-marca.png);background-repeat:no-repeat;background-position:right 44px bottom 136px;background-size:auto min(17vh,170px)}
   html.menu-open nav ul{display:flex}
   html.menu-open .menu-btn{position:relative;z-index:8}
 }
