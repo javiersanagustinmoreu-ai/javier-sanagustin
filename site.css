@@ -162,3 +162,5 @@ body:has(.salawrap) .soc{display:none}
 @media (min-width:761px) and (max-width:900px){header nav ul{gap:.35rem .8rem}header nav ul a{font-size:.84rem}header .name{font-size:clamp(1.3rem,3.6vw,1.7rem)}}
 body:has(.page) .soc{flex-direction:column;left:12px;bottom:22px;gap:10px}
 @media (max-width:1199px){body:has(.page) .soc{display:none}}
+
+.price small,.pr small{font-weight:400;font-size:.42em;letter-spacing:.02em;opacity:.7;margin-left:.3em}
